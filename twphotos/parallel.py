@@ -40,6 +40,7 @@ def worker(queue, user, size, outdir, total):
         except Queue.Empty:
             break
         media_url = photo[1]
+
         urllib3_download(media_url, size, outdir)
         with lock:
             global downloaded

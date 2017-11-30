@@ -3,7 +3,10 @@ import requests
 
 
 def download(media_url, size, outdir):
-    r = requests.get(media_url + ':' + size, stream=True)
+    if '.mp4' in media_url:
+        r = requests.get(media_url)
+    else:
+        r = requests.get(media_url + ':orig')
     bs = os.path.basename(media_url)
     filename = os.path.join(outdir or '', bs)
     with open(filename, 'wb') as fd:

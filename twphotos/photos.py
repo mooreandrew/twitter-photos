@@ -112,9 +112,23 @@ class TwitterPhotos(object):
             if s.media is not None:
                 for m in s.media:
                     m_dict = m.AsDict()
-                    if m_dict['type'] == 'photo':
-                        t = (m_dict['id'], m_dict['media_url'])
+
+                    if m_dict['type'] in 'photo':
+                        t = (m_dict['id'], m_dict['media_url'], 'photo')
                         fetched_photos.append(t)
+                    if m_dict['type'] in 'video':
+
+                        max_bitrate = 0
+                        video_url = None
+                        for variant in m_dict['video_info']['variants']:
+                            if 'bitrate' in variant:
+                                if variant['bitrate'] > max_bitrate:
+                                    video_url = variant['url']
+                                    max_bitrate = variant['bitrate']
+
+                        if video_url:
+                            t = (m_dict['id'], video_url, 'video')
+                            fetched_photos.append(t)
 
         if num is not None:
             if len(photos + fetched_photos) >= num:
